@@ -2,7 +2,7 @@
 
 这个仓库是我的个人学习专用目录。学习主要通过 `/teach` skill 进行，每个学习主题是一个独立的教学工作区。
 
-所有课程和参考文档会汇总成一个静态网站：左侧是全站目录，右侧是内容。网站可以在本地预览，也可以按原目录结构直接部署到服务器。
+所有课程、参考文档和 Markdown 笔记会汇总成一个静态网站：左侧是全站目录，右侧是内容。网站可以在本地预览，也可以按原目录结构直接部署到服务器。
 
 ## 目录结构
 
@@ -10,11 +10,17 @@
 learning/
 ├── CLAUDE.md                      # 本文件：全局约定
 ├── TOPICS.md                      # 分类与主题索引（也是网站目录显示名的来源）
-├── Makefile                       # make serve / build / deploy
+├── Makefile                       # make serve / build / deploy（封装 pnpm）
+├── package.json / pnpm-lock.yaml  # Node 依赖（第三方库一律走这里）
+├── vite.config.ts                 # 开发服务器（实时渲染 + 自动刷新）与浏览器端脚本打包
+├── .claude/skills/teach/          # 本仓库专用的 /teach skill，已写入本文件的约定
 ├── assets/                        # 全站共享
 │   ├── site.css                   # 全站唯一样式表，同时也是设计规范
-│   └── vendor/                    # 第三方库（本地存放，不走 CDN）
-├── scripts/                       # render.py 渲染核心 / serve.py 开发服务器 / build.py 构建
+│   └── favicon.svg
+├── scripts/
+│   ├── site/                      # Node 端：tree.ts 站点树 / markdown.ts Markdown 渲染 / render.ts 页面与布局
+│   ├── client/                    # 浏览器端：侧栏、工具条、搜索、代码块等交互（自动注入每个页面）
+│   └── build.ts                   # 静态构建
 ├── site/                          # 构建产物（git 已忽略，不要手动编辑）
 └── topics/
     ├── economics/                 # 分类：经济学
@@ -46,7 +52,7 @@ learning/
 
 ## 调用 `/teach` 时的约定（重要）
 
-`/teach` skill 默认把「当前目录」当作单一主题的工作区。这里有多个主题，所以：
+本仓库的 `.claude/skills/teach/` 是项目专用的 `/teach`，已经按下面的约定改写；全局的 teach skill 默认把「当前目录」当作单一主题的工作区。这里有多个主题，所以：
 
 - **skill 里所有相对路径（`MISSION.md`、`./lessons/` 等）都相对于主题目录（如 `topics/computer-science/algorithms/dynamic-programming/`），而不是仓库根目录或分类目录。**
 - 先确定主题：
@@ -65,24 +71,28 @@ learning/
 - 课程只允许在自己的 `<style>` 里写本课专属的少量样式。不得重新定义 token，也不得覆盖全局样式。
 - 可复用的新样式加进 `site.css`。可复用的新组件（测验逻辑、图示辅助、模拟器等）放到根目录 `assets/`，并在 `site.css` 的组件清单里登记。不要把它们内联在单个课程里。
 - 主题下的 `assets/` 只放本主题专属的东西。**不要为主题新建或复制样式表。**
-- 不依赖在线 CDN。需要第三方库（如 KaTeX）时，把它的发布文件下载到 `assets/vendor/<库名>/`，并在 `assets/vendor/README.md` 里登记版本、来源和许可证。
+- 不依赖在线 CDN。需要第三方库时用 `pnpm add` 加进 `package.json`（版本由 lockfile 锁定），由构建打包进 `site/_app/`；站点级的功能写在 `scripts/client/`，不要在课程里用 `<script src="https://…">`。
+- 已内置、课程可以直接受益的能力：代码块复制按钮、图片点击放大（`.no-zoom` 关闭）、本页目录、全站搜索、配色与正文宽度切换。课程不需要也不要自己实现这些。
 
 ## 网站
 
-- **布局**：每个页面左侧是全站目录树（分类、主题，再到课程和参考），右侧是内容。
-- **自动生成的部分**：目录树，以及根目录、每个分类、每个主题的 `index.html` 首页，都由 `scripts/render.py` 在渲染时自动生成并注入。**不要在课程里手写全站导航，也不要自己创建 `index.html`。**
-- **显示名的来源**：分类名、主题名、状态和一句话目标取自 `TOPICS.md`，课程和参考文档的名称取自页面的 `<title>`。所以 `<title>` 要简短，能在目录里一眼认出是哪一课。
+- **布局**：每个页面左侧是全站目录树（分类 → 主题 → 课程 / 参考 / 笔记），右侧是内容，顶部是工具条。目录可以整栏收起（`[` 键）、拖动调整宽度，窄屏变成抽屉；正文宽度有 窄 / 适中 / 宽 / 全宽 四档，默认「适中」并随窗口自适应。
+- **自动生成的部分**：目录树、工具条、课程页底部的上一课 / 下一课，以及根目录、每个分类、每个主题的 `index.html` 首页，都由 `scripts/site/render.ts` 在渲染时自动生成并注入。主题首页顶部显示 `MISSION.md` 的内容。**不要在课程里手写全站导航，也不要自己创建 `index.html`。**
+- **显示名的来源**：分类名、主题名、状态和一句话目标取自 `TOPICS.md`，课程和参考文档的名称取自页面的 `<title>`，Markdown 的名称取自第一个 `# ` 标题。所以这些标题要简短，能在目录里一眼认出是哪一篇。
 - **哪些内容会发布**：
-  - `topics/**/lessons/*.html`
-  - `topics/**/reference/*.html`
-  - 根目录和各主题的 `assets/`
-  - 自动生成的首页
+  - `topics/**/lessons/*.html`、`topics/**/reference/*.html`
+  - 主题根目录的 Markdown（`MISSION.md` 渲染在主题首页，其余如 NOTES、GLOSSARY、RESOURCES 各成一页，`xxx.md` → `xxx.html`），以及 `learning-records/*.md`
+  - 根目录和各主题的 `assets/`（Markdown 里引用的图片放在主题 `assets/` 下）
+  - 自动生成的首页、`site/_app/`（浏览器端脚本）、`site/pagefind/`（搜索索引）
 
-  Markdown 文件（MISSION、NOTES、学习记录等）不会上线。
+  这些 Markdown 会公开发布，**不要在里面写不想公开的内容**。
+- **课程和参考只用 HTML**（表现力更强）。Markdown 只用于上面这些笔记类文件。
+- **Markdown 写法**：GFM（表格、任务列表、删除线、自动链接）、脚注、`$…$` / `$$…$$` KaTeX 公式、代码块（Shiki 高亮）、` ```mermaid ` 图、`==高亮==`、`H~2~O`、`x^2^`、`++插入++`、缩写、定义列表、`:emoji:`、`{.class}` 属性、YAML frontmatter（显示为元信息行）。提示框两种写法都行，都会渲染成 `.callout`：`> [!NOTE]`（TIP / IMPORTANT / WARNING / CAUTION）或 `::: tip 标题`（note / tip / important / warning / caution / source / ask / details）。
+- **Markdown 链接**：相对链接照常写 `.md`，渲染时自动改成 `.html`（`MISSION.md` 指向主题首页）；也可以用 `[[NOTES.md]]`、`[[GLOSSARY]]`、`[[0003-xxx]]`、`[[名称|显示文字]]` 在同一主题内按文件名或标题查找。找不到的 wiki 链接会显示成灰色虚线。
 - **URL 和源路径一一对应**：例如 `topics/computer-science/algorithms/dp/lessons/0001-intro.html` 对应 `http://localhost:8080/topics/computer-science/algorithms/dp/lessons/0001-intro.html`。
-- **命令**：
-  - `make serve`：启动开发服务器，地址是 http://localhost:8080 ，只监听本机。每次请求都用最新的源文件实时渲染，源文件一变，页面就自动刷新；新增课程后，目录会立即更新。
-  - `make build`：生成纯静态的 `site/`，用于部署。
+- **命令**（Node ≥ 22.18 + pnpm；首次运行会自动 `pnpm install`）：
+  - `make serve`：启动 Vite 开发服务器，地址是 http://localhost:8080 ，只监听本机。每次请求都用最新的源文件实时渲染，源文件一变，页面就自动刷新；新增课程后，目录会立即更新。搜索使用上一次 `make build` 的索引。
+  - `make build`：生成纯静态的 `site/`（含 Pagefind 搜索索引），用于部署。需要通过 HTTP 访问，直接双击打开 `site/` 里的文件时交互脚本不会运行。
   - `make deploy DEPLOY_TARGET=user@host:/path`：先构建，再用 rsync 上传。
 - **登记检查**：如果某个目录有 `MISSION.md`，却没有在 `TOPICS.md` 中登记，渲染会报错：浏览器里显示错误页，`make build` 失败。
 
@@ -100,7 +110,7 @@ learning/
   - `<body>` 里只放一个 `<article>`，正文写在里面。
 - 课程中的交叉链接（到其他课程、参考文档、其他主题）一律用相对路径，保证整站放到任何路径下、或者直接打开源文件时，链接都有效。
 - **生成或修改课程后**：
-  1. 用 `curl -sf http://localhost:8080/__reload` 检查开发服务器是否在运行。如果没有，在后台启动 `make serve`。
+  1. 用 `curl -sf http://localhost:8080/ -o /dev/null` 检查开发服务器是否在运行。如果没有，在后台启动 `make serve`。
   2. 用 `open http://localhost:8080/topics/<主题路径>/lessons/<file>.html` 在浏览器中打开。
   3. 如果页面显示错误（例如主题没有登记），先修复再继续。
 

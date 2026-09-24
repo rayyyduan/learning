@@ -2,5 +2,5 @@
 .claude/settings.local.json
 .claude/worktrees/
 .claude/.cc-writes/
-site/
-__pycache__/
+/node_modules/
+/site/
