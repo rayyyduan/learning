@@ -2,6 +2,8 @@
 #   make serve                                   开发服务器（实时渲染 + 自动刷新）
 #   make build                                   生成纯静态的 site/（含搜索索引）
 #   make deploy DEPLOY_TARGET=user@host:/path    构建并用 rsync 上传
+#   推送到 main 时，GitHub Actions 会构建并发布到 GitHub Pages
+#   （https://rayyyduan.github.io/learning/）
 
 PORT ?= 8080
 DEPLOY_TARGET ?=
