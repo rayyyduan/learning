@@ -54,6 +54,9 @@ async function main() {
   await index.writeFiles({ outputPath: path.join(OUT, "pagefind") });
   await pagefind.close();
 
+  // GitHub Pages 按 Jekyll 处理时会跳过 _app/ 等以下划线开头的目录
+  fs.writeFileSync(path.join(OUT, ".nojekyll"), "");
+
   console.log(`已生成 ${entries.size} 个页面和文件到 site/，搜索索引收录 ${added.page_count} 个页面。`);
 }
 
