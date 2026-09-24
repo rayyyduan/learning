@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>验证清单</title>
+<link rel="stylesheet" href="../../../../assets/site.css">
+<style>
+  /* 本页专属：清单项之间留一点空 */
+  .checklist li + li { margin-top: var(--space-2); }
+</style>
+</head>
+<body>
+<article>
+<h1>验证清单</h1>
+<p class="subtitle">改动网站（渲染脚本、site.css、浏览器端脚本）后，逐项过一遍。</p>
+
+<div class="callout callout--tip"><span class="callout__title">先跑这两条</span>
+<p><code>pnpm check</code> 做类型检查；<code>make build</code> 构建成功，并且最后一行显示搜索索引收录的页面数。</p></div>
+
+<h2>目录</h2>
+<ul class="checklist">
+  <li>当前页在目录里高亮；只展开当前页所在的分支，其他分支的展开 / 收起会被记住。</li>
+  <li>点分类名跳到分类首页，点箭头只展开 / 收起。</li>
+  <li>点 « 按钮或按 <kbd>[</kbd> 收起整个目录；左上角出现 ☰；刷新后仍然收起。</li>
+  <li>拖动目录右边缘调整宽度，刷新后保持；双击边缘恢复默认。</li>
+  <li>主题下有「课程 / 参考 / 笔记」三组，「学习记录」可以折叠；笔记顺序是 NOTES → GLOSSARY → RESOURCES → IDEAS（没有一级标题，显示文件名）。</li>
+  <li>「测试用例」分类下三个主题分别显示 进行中 / 暂停 / 已完成 三种状态标记；超长主题名正常换行，里面的 &amp; 和 &lt;特殊字符&gt; 原样显示。</li>
+  <li><a href="../../empty-topic/index.html">空主题</a> 首页的课程、参考、笔记都显示「暂无」，目录里它没有展开箭头。</li>
+</ul>
+
+<h2>工具条</h2>
+<ul class="checklist">
+  <li>宽度：窄 / 适中 / 宽 / 全宽依次切换，正文明显变宽；宽和全宽下旁注变成正文里的缩进块；刷新后保持。</li>
+  <li>配色：跟随系统 → 浅色 → 深色循环；图标跟着变；Mermaid 图跟着换主题；刷新后没有闪白。</li>
+  <li>本页目录：<a href="../lessons/0002-long-page.html">第 2 课</a> 上点开，跳转后标题不被工具条遮住；滚动时高亮当前小节。</li>
+  <li>搜索：按 <kbd>/</kbd> 或 <kbd>⌘</kbd> <kbd>K</kbd> 打开，输入「脚注」有结果，上下键选择、回车跳转、<kbd>Esc</kbd> 关闭。开发模式下要先 <code>make build</code> 一次。</li>
+</ul>
+
+<h2>Markdown</h2>
+<ul class="checklist">
+  <li><a href="../NOTES.html">Markdown 全写法</a> 从上到下每一节都正常：提示框颜色对、代码有高亮和语言标签、公式和图表都渲染出来、宽表格横向滚动、图片可放大。</li>
+  <li>右侧「本页目录」在宽屏显示，窗口变窄后隐藏，改由工具条按钮打开。</li>
+  <li>主题首页顶部显示 MISSION 的内容，里面的 wiki 链接能跳转。</li>
+  <li>主题首页 MISSION 里的公式正常显示。</li>
+  <li>学习记录页显示 frontmatter 元信息行，底部有上一篇 / 下一篇；<a href="../learning-records/0003-images-in-records.html">第三条记录</a> 的图片能显示，元信息行里没有 tags 和 evidence。</li>
+  <li>NOTES 的「嵌套与重复」一节：两个「重复标题」在本页目录里各跳各的；列表和提示框里的代码、公式、表格正常；超长标题在右侧目录里换行而不撑宽。</li>
+</ul>
+
+<h2>课程</h2>
+<ul class="checklist">
+  <li><a href="../lessons/0001-typography.html">第 1 课</a>：旁注在右侧；所有提示框、测验状态、图片、表格样式正常；代码块有复制按钮，复制内容正确。</li>
+  <li>课程底部的上一课 / 下一课和正文左右对齐；只有一课的 <a href="../../done-topic/lessons/0001-only.html">主题</a> 没有上一课 / 下一课。</li>
+  <li><a href="../lessons/0003-scripts.html">第 3 课</a>：计数按钮能用（普通脚本）、module 脚本显示「全站目录已注入」、测验能点、脚本插入的小节出现在本页目录里；控制台没有报错。</li>
+  <li><a href="../lessons/0004-edge-cases.html">第 4 课</a>：没链接 site.css 也有样式；标题里的特殊字符在目录、标签页、上一课里都正确；工具条没有「本页目录」按钮；超长单词不撑破正文栏。</li>
+  <li>直接双击打开源文件（不经过服务器），页面仍然可读，样式表路径正确。</li>
+</ul>
+
+<h2>窄屏与打印</h2>
+<ul class="checklist">
+  <li>窗口拉到手机宽度：目录变成左侧抽屉，点遮罩、按 <kbd>Esc</kbd> 或点链接后关闭；页面没有横向滚动条。</li>
+  <li>打印预览：没有目录、工具条、复制按钮，正文铺满纸面。</li>
+</ul>
+</article>
+</body>
+</html>

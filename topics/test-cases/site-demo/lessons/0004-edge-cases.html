@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第 4 课：边界 &lt;情况&gt; &amp; &quot;引号&quot;</title>
+<!-- 故意没有链接 site.css：渲染时应该自动补上 -->
+</head>
+<body>
+<article>
+<h1>第 4 课：边界 &lt;情况&gt; &amp; &quot;引号&quot;</h1>
+<p class="subtitle">这一课故意写得不规范，验证渲染脚本的容错。</p>
+<ul>
+  <li><strong>没有链接 site.css</strong>：经过服务器打开时样式正常，说明渲染时自动补上了。直接双击打开源文件则没有样式，这是预期的。</li>
+  <li><strong>标题里有特殊字符</strong>：目录、浏览器标签页、上一课 / 下一课里都应该正确显示 &lt;、&gt;、&amp;、引号，而不是乱码或被当成标签。</li>
+  <li><strong>没有 h2 / h3</strong>：工具条里不应该出现「本页目录」按钮。</li>
+  <li><strong>最后一课</strong>：底部只有「← 上一课」，没有下一课。</li>
+</ul>
+<p>一段很长的英文单词不应该撑破正文栏：Pneumonoultramicroscopicsilicovolcanoconiosis_and_a_very_long_identifier_without_any_spaces_at_all_to_test_overflow_wrapping.</p>
+</article>
+</body>
+</html>

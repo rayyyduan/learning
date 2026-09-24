@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第 3 课：课程自带脚本</title>
+<link rel="stylesheet" href="../../../../assets/site.css">
+<script src="../assets/counter.js"></script>
+<style>
+  /* 本课专属：演示区域 */
+  .demo-box { padding: var(--space-4) var(--space-5); border: 1px dashed var(--color-border); border-radius: var(--radius); }
+  .demo-box button { font: inherit; padding: var(--space-1) var(--space-3); }
+</style>
+</head>
+<body>
+<article>
+<h1>第 3 课：课程自带脚本</h1>
+<p class="subtitle">课程是交互式的。这一课验证课程自己的脚本和站点注入的脚本能和平共处。</p>
+
+<h2>普通脚本（引用主题 assets/）</h2>
+<p><code>&lt;head&gt;</code> 里用相对路径引用了 <code>../assets/counter.js</code>，它声明了全局变量 <code>store</code>，名字和站点脚本内部的模块同名。</p>
+<div class="demo-box">
+  <button type="button" id="demo-counter">点我</button>
+  <span id="demo-counter-output" class="muted">脚本没有运行</span>
+</div>
+
+<h2>内联 module 脚本</h2>
+<p>下面的状态由一个内联 <code>&lt;script type="module"&gt;</code> 写入。它还会检查站点布局是否已经注入（能找到全站目录）。</p>
+<div class="demo-box"><span id="demo-module-output" class="muted">module 脚本没有运行</span></div>
+
+<h2>可以交互的测验</h2>
+<p>用内联普通脚本给 <code>.quiz</code> 组件加上点击逻辑（真正的课程应该把这段逻辑做成根目录 <code>assets/</code> 里的组件）。</p>
+<div class="quiz" id="demo-quiz">
+  <p class="quiz__question">切换侧栏的快捷键是哪个？</p>
+  <ul class="quiz__options">
+    <li><button type="button" class="quiz__option" data-correct="false">斜杠键</button></li>
+    <li><button type="button" class="quiz__option" data-correct="true">左方括号</button></li>
+    <li><button type="button" class="quiz__option" data-correct="false">Esc 键</button></li>
+  </ul>
+  <p class="quiz__feedback" aria-live="polite"></p>
+</div>
+
+<h2>在课程里改 DOM 后</h2>
+<p>下面这个标题是脚本在页面加载时插入的。站点脚本在它之后运行，所以它也应该出现在「本页目录」里。</p>
+<div id="demo-inserted"></div>
+</article>
+
+<script>
+  (function () {
+    var quiz = document.getElementById("demo-quiz");
+    var feedback = quiz.querySelector(".quiz__feedback");
+    quiz.addEventListener("click", function (e) {
+      var option = e.target.closest(".quiz__option");
+      if (!option) return;
+      var correct = option.dataset.correct === "true";
+      quiz.querySelectorAll(".quiz__option").forEach(function (b) { b.classList.remove("is-correct", "is-wrong"); });
+      option.classList.add(correct ? "is-correct" : "is-wrong");
+      feedback.className = "quiz__feedback " + (correct ? "is-correct" : "is-wrong");
+      feedback.textContent = correct ? "答对了：按 [ 收起或展开目录。" : "不对，再想想。";
+    });
+    var h = document.createElement("h3");
+    h.textContent = "脚本插入的小节";
+    document.getElementById("demo-inserted").replaceWith(h);
+  })();
+</script>
+<script type="module">
+  const out = document.getElementById("demo-module-output");
+  const nav = document.getElementById("site-nav");
+  out.textContent = nav ? "module 脚本已运行，全站目录已注入" : "module 脚本已运行，但没有找到全站目录（直接打开源文件时属于正常）";
+  out.classList.remove("muted");
+</script>
+</body>
+</html>

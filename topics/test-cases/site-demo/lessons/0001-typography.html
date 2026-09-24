@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第 1 课：版式与组件</title>
+<link rel="stylesheet" href="../../../../assets/site.css">
+</head>
+<body>
+<article>
+<p class="breadcrumb">站点演示 / 课程</p>
+<h1>第 1 课：版式与组件</h1>
+<p class="subtitle">site.css 组件清单里的每一个组件，在这一页都有一个样例。</p>
+<p class="meta">2026-09-24 · <span class="status status--active">进行中</span> <span class="status status--paused">暂停</span> <span class="status status--done">已完成</span></p>
+
+<h2 id="text">正文与旁注</h2>
+<p>这是一段足够长的正文，用来观察正文栏的宽度。默认「适中」档位下每行大约四十多个汉字，窗口变窄时自动收缩；切到「窄」档会回到每行约三十五个汉字的经典宽度。<mark>高亮文字</mark>、<strong>粗体</strong>、<em>斜体</em>、<code>行内代码</code>、<kbd>[</kbd> 快捷键都应该清晰可辨。</p>
+<aside class="sidenote">这是一条旁注。在「窄」「适中」档位的宽屏下，它浮在正文右侧；切到「宽」「全宽」，或者把窗口拉窄，它会变成正文里的缩进块。</aside>
+<p>第二段正文紧跟在旁注后面。旁注在 HTML 里写在它所解释的段落之后，宽屏时和下一段顶部对齐，这是 Tufte 风格的常见做法。这一段再多写几句，让它和旁注在高度上有重叠，方便检查两者不会互相遮挡。</p>
+<p class="muted">这是一段 .muted 次要文字。</p>
+
+<h2 id="callouts">提示框</h2>
+<div class="callout callout--note"><span class="callout__title">callout--note</span><p>补充说明。</p></div>
+<div class="callout callout--tip"><span class="callout__title">callout--tip</span><p>技巧。</p></div>
+<div class="callout callout--important"><span class="callout__title">callout--important</span><p>重要。</p></div>
+<div class="callout callout--warn"><span class="callout__title">callout--warn</span><p>注意 / 陷阱。</p></div>
+<div class="callout callout--caution"><span class="callout__title">callout--caution</span><p>警告，后果严重。</p></div>
+<div class="callout callout--source"><span class="callout__title">callout--source</span><p>推荐的主资料：<a href="https://markdown-it.github.io/">markdown-it</a>。</p></div>
+<div class="callout callout--ask"><span class="callout__title">callout--ask</span><p>有任何不清楚的地方，随时问老师（agent）。</p></div>
+
+<h2 id="quiz">测验</h2>
+<p>下面是测验组件的三种状态（静态样例，没有交互逻辑）。</p>
+<div class="quiz">
+  <p class="quiz__question">正文宽度的默认档位是哪一个？</p>
+  <ul class="quiz__options">
+    <li><button type="button" class="quiz__option">窄档</button></li>
+    <li><button type="button" class="quiz__option is-correct">适中</button></li>
+    <li><button type="button" class="quiz__option is-wrong">全宽</button></li>
+  </ul>
+  <p class="quiz__feedback is-correct">答对了：默认是「适中」，并随窗口自适应。</p>
+</div>
+
+<h2 id="code">代码块</h2>
+<p>课程里的 <code>&lt;pre&gt;</code> 不做语法高亮，但会自动加上语言标签和复制按钮（鼠标移上去才出现）。</p>
+<pre><code class="language-js">// 复制按钮应该只复制代码本身
+const pages = ["0001-typography.html", "0002-long-page.html"];
+console.log(pages.length);</code></pre>
+<pre><code>没有语言的代码块只有复制按钮。</code></pre>
+
+<h2 id="figure">图片与表格</h2>
+<figure>
+  <img src="../assets/sample.svg" alt="示例图形">
+  <figcaption>图 1：主题 assets/ 里的图片，点击可以放大。</figcaption>
+</figure>
+<figure class="no-zoom">
+  <img src="../assets/sample.svg" alt="不可放大的示例图形" width="320">
+  <figcaption>图 2：加了 .no-zoom，点击不会放大。</figcaption>
+</figure>
+<table>
+  <thead><tr><th>档位</th><th>目标宽度</th><th>旁注</th></tr></thead>
+  <tbody>
+    <tr><td>窄</td><td>38rem</td><td>右侧</td></tr>
+    <tr><td>适中（默认）</td><td>48rem</td><td>右侧</td></tr>
+    <tr><td>宽</td><td>60rem</td><td>正文内</td></tr>
+    <tr><td>全宽</td><td>铺满</td><td>正文内</td></tr>
+  </tbody>
+</table>
+<div class="table-wrap fullwidth">
+  <table>
+    <thead><tr><th>.fullwidth</th><th>突破正文栏</th><th>的宽表格</th><th>第四列</th><th>第五列</th><th>第六列</th></tr></thead>
+    <tbody><tr><td>宽屏时伸进旁注栏</td><td>内容</td><td>内容</td><td>内容</td><td>内容</td><td>内容</td></tr></tbody>
+  </table>
+</div>
+
+<h2 id="misc">其他默认样式</h2>
+<blockquote><p>引用块：学习的目标是存储强度，而不是一时的流畅感。</p></blockquote>
+<details><summary>details 折叠块</summary><p>展开后的内容。</p></details>
+<dl><dt>正文栏</dt><dd>正文文字所在的那一栏。</dd></dl>
+<hr>
+<p>交叉链接用相对路径：<a href="0002-long-page.html">第 2 课</a>、<a href="../reference/checklist.html">验证清单</a>、<a href="../NOTES.html">Markdown 全写法</a>。</p>
+</article>
+</body>
+</html>
