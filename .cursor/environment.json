@@ -1,0 +1,11 @@
+{
+  "name": "学习工作区（Learning Site）",
+  "install": "export NVM_DIR=\"$HOME/.nvm\"; . \"$NVM_DIR/nvm.sh\"; export PATH=\"$(dirname \"$(nvm which default)\"):$PATH\"; pnpm install --frozen-lockfile && pnpm build",
+  "terminals": [
+    {
+      "name": "dev-server",
+      "command": "export NVM_DIR=\"$HOME/.nvm\"; . \"$NVM_DIR/nvm.sh\"; export PATH=\"$(dirname \"$(nvm which default)\"):$PATH\"; make serve"
+    }
+  ],
+  "ports": [8080]
+}
