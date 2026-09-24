@@ -38,6 +38,8 @@
      .quiz__question  题干         .quiz__options  选项列表（ul）
      .quiz__option    选项按钮（button），答对加 .is-correct，答错加 .is-wrong
      .quiz__feedback  反馈文字，同样用 .is-correct / .is-wrong
+     交互脚本是 assets/quiz.js：选项带 data-correct="true|false"，
+     可选 data-feedback 作为点选后的反馈。课程用相对路径引用该脚本。
    .status                       状态标记：.status--active 进行中 / --paused 暂停 / --done 已完成
    .no-zoom                      图片默认可点击放大，加在图片或其容器上可关闭
    kbd / mark / details / figure / table / pre / blockquote  已有默认样式
