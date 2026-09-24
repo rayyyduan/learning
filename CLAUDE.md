@@ -94,6 +94,7 @@ learning/
   - `make serve`：启动 Vite 开发服务器，地址是 http://localhost:8080 ，只监听本机。每次请求都用最新的源文件实时渲染，源文件一变，页面就自动刷新；新增课程后，目录会立即更新。搜索使用上一次 `make build` 的索引。
   - `make build`：生成纯静态的 `site/`（含 Pagefind 搜索索引），用于部署。需要通过 HTTP 访问，直接双击打开 `site/` 里的文件时交互脚本不会运行。
   - `make deploy DEPLOY_TARGET=user@host:/path`：先构建，再用 rsync 上传。
+  - 推送到 `main` 后，GitHub Actions（`.github/workflows/pages.yml`）会构建并发布到 GitHub Pages：https://rayyyduan.github.io/learning/ 。仓库 Settings → Pages → Source 选 GitHub Actions。
 - **登记检查**：如果某个目录有 `MISSION.md`，却没有在 `TOPICS.md` 中登记，渲染会报错：浏览器里显示错误页，`make build` 失败。
 
 ## 语言
