@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>meminfo 命令</title>
+<link rel="stylesheet" href="../../../../../assets/site.css">
+</head>
+<body>
+<article>
+<h1>meminfo 命令</h1>
+<p class="subtitle">`adb shell dumpsys meminfo` 的调用形式。数字单位是 KB。输出随 Android 版本变化。</p>
+
+<h2>两条报告</h2>
+<table>
+  <thead><tr><th>命令</th><th>报告</th></tr></thead>
+  <tbody>
+    <tr><td><code>adb shell dumpsys meminfo</code></td><td>整机快照：总内存、空闲内存，进程按 PSS 排列</td></tr>
+    <tr><td><code>adb shell dumpsys meminfo &lt;package|pid&gt;</code></td><td>这一个进程此刻的分配表</td></tr>
+  </tbody>
+</table>
+<p>包名和 pid 二选一。例如 <code>com.google.android.apps.maps</code>，或 <code>pidof</code> 得到的数字。</p>
+
+<h2>已在官方文档里出现的标志</h2>
+<table>
+  <thead><tr><th>标志</th><th>作用</th><th>出处</th></tr></thead>
+  <tbody>
+    <tr><td><code>-d</code></td><td>多打 Dalvik / ART 的明细（<code>.Heap</code>、<code>.LOS</code>、<code>.GC</code> 等）</td><td><a href="https://developer.android.com/tools/dumpsys">dumpsys</a></td></tr>
+    <tr><td><code>-a</code></td><td>附上各段内存映射的细目</td><td><a href="https://developer.android.com/topic/performance/memory/guide/tools-overview">Quick assessment tools</a></td></tr>
+    <tr><td><code>-s</code></td><td>只留分类摘要</td><td>同上</td></tr>
+    <tr><td><code>-h</code></td><td>打印这份服务支持的全部标志</td><td><a href="https://developer.android.com/tools/dumpsys">dumpsys</a></td></tr>
+  </tbody>
+</table>
+
+<h2>和 procstats 的分工</h2>
+<p><code>meminfo</code> 是某一时刻的一张表。<code>adb shell dumpsys procstats --hours 3</code> 才是过去几小时的抽样。两份报告回答的问题不同。</p>
+<p>单进程表怎么读，见 <a href="../lessons/0001-two-commands.html">第 1 课：两条命令</a>。</p>
+</article>
+</body>
+</html>

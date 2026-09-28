@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第 1 课：两条命令</title>
+<link rel="stylesheet" href="../../../../../assets/site.css">
+<script src="../../../../../assets/quiz.js"></script>
+</head>
+<body>
+<article>
+<h1>第 1 课：两条命令</h1>
+<p class="subtitle">先分清 <code>dumpsys meminfo</code> 的两种调用。表里的每一行留到下一课。</p>
+
+<p><code>dumpsys</code> 跑在设备上，把某个系统服务此刻的状态打成文本。内存这份服务叫 <code>meminfo</code>。它给的是<strong>某一个时刻</strong>的快照，单位是 KB。过去几小时的变化不在这里，那是 <code>procstats</code> 的事。</p>
+
+<aside class="sidenote">主资料：<a href="https://developer.android.com/tools/dumpsys">dumpsys</a> 的 meminfo 一节。整机视图和 <code>-a</code> / <code>-s</code> 见 <a href="https://developer.android.com/topic/performance/memory/guide/tools-overview">Quick assessment tools</a>。</aside>
+
+<h2>整机，或一个进程</h2>
+<pre class="mermaid">flowchart TD
+  A["adb shell dumpsys meminfo"] --> B{"后面有包名或 pid 吗"}
+  B -->|没有| C["整机快照：进程按 PSS 排列"]
+  B -->|有| D["这一个进程的分配表"]
+</pre>
+<p>不写参数：</p>
+<pre><code class="language-shell">adb shell dumpsys meminfo</code></pre>
+<p>得到整机摘要：总内存、空闲内存，以及按 PSS（proportional set size，按共享比例分摊后的内存）排列的进程列表。</p>
+<p>写上包名或进程号：</p>
+<pre><code class="language-shell">adb shell dumpsys meminfo com.google.android.apps.maps
+adb shell dumpsys meminfo 18227</code></pre>
+<p>得到这一个进程的表。开头一行是 <code>** MEMINFO in pid … [包名] **</code>。同一台机器上，包名和 pid 指向同一份报告。</p>
+<p>命令对照表在 <a href="../reference/commands.html">meminfo 命令</a>。</p>
+
+<h2>先看两列</h2>
+<p>单进程表有很多列。Android 开发者文档写明：一般先看 <code>Pss Total</code> 和 <code>Private Dirty</code>。</p>
+<ul>
+  <li><code>Pss Total</code>：这一行里，只属于本进程的页，加上和其他进程共享的页按份额分摊之后的大小。把各进程的 PSS 加起来，接近这些进程实际占用的内存，所以它适合拿来和别的进程、和整机可用内存比。</li>
+  <li><code>Private Dirty</code>：只属于本进程、而且已经被改过的内存（匿名内存也算在这里）。系统不能把它直接丢掉。本进程结束后，这部分才还给系统。查泄漏时先看它。</li>
+</ul>
+<p><code>TOTAL</code> 那一行的 <code>Pss Total</code>，是上面各行 PSS 的和，也就是这个进程的整体内存重量。</p>
+
+<div class="callout callout--warn">
+  <span class="callout__title">表头会随版本变</span>
+  <p><a href="https://developer.android.com/tools/dumpsys">dumpsys</a> 页的示例把第四列标成 <code>Swapped Dirty</code>。<a href="https://developer.android.com/topic/performance/memory/guide/tools-overview">2026 年的指南</a>把同一位置标成 <code>SwapPss</code>，并多了一列 <code>Rss</code>。读你自己的输出时，以你设备打出来的表头为准。</p>
+</div>
+
+<h2>自己判一次</h2>
+<div class="quiz">
+  <p class="quiz__question">不写包名、也不写 pid 时，<code>dumpsys meminfo</code> 给出的是哪一种报告？</p>
+  <ul class="quiz__options">
+    <li><button type="button" class="quiz__option" data-correct="true" data-feedback="答对了。没有包名和 pid，就是整机快照，进程按 PSS 排列。">整机内存快照</button></li>
+    <li><button type="button" class="quiz__option" data-correct="false" data-feedback="单进程表要在命令后面写上包名或 pid。">单进程明细表</button></li>
+    <li><button type="button" class="quiz__option" data-correct="false" data-feedback="几小时的抽样是 dumpsys procstats，meminfo 只拍此刻。">三小时统计值</button></li>
+  </ul>
+  <p class="quiz__feedback" aria-live="polite"></p>
+</div>
+<div class="quiz">
+  <p class="quiz__question">读单进程表时，官方文档说一般先看哪两列？</p>
+  <ul class="quiz__options">
+    <li><button type="button" class="quiz__option" data-correct="false" data-feedback="Private Clean 和 Heap Alloc 有时有用，文档说一般先看的是另外两列。">清洁和堆空闲量</button></li>
+    <li><button type="button" class="quiz__option" data-correct="true" data-feedback="答对了。Pss Total 用来比重量，Private Dirty 用来看收不回来的私有内存。">总量和私有脏页</button></li>
+    <li><button type="button" class="quiz__option" data-correct="false" data-feedback="SwapPss 和 Rss 在新版表里很重要，文档点名先看的仍是 Pss Total 和 Private Dirty。">交换和驻留总量</button></li>
+  </ul>
+  <p class="quiz__feedback" aria-live="polite"></p>
+</div>
+
+<div class="callout callout--source">
+  <span class="callout__title">这一课的主资料</span>
+  <p>读 <a href="https://developer.android.com/tools/dumpsys">dumpsys</a> 里 “View memory allocations” 到 meminfo 结束。对照时打开 <a href="https://developer.android.com/topic/performance/memory/guide/tools-overview">Quick assessment tools</a> 的 dumpsys meminfo 一节。</p>
+</div>
+<div class="callout callout--ask">
+  <span class="callout__title">随时问</span>
+  <p>表头和文档示例对不上、或者你手里已有一份输出，直接贴过来问。</p>
+</div>
+</article>
+</body>
+</html>

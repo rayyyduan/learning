@@ -28,6 +28,12 @@
 | --- | --- | --- | --- | --- |
 | _暂无_ | | | | |
 
+### Android · `computer-science/android/`
+
+| 主题 | 目录 | 状态 | 开始日期 | 一句话目标 |
+| --- | --- | --- | --- | --- |
+| dumpsys meminfo | `computer-science/android/meminfo/` | 进行中 | 2026-09-24 | 读懂 dumpsys meminfo 的命令、列和相关内存概念 |
+
 ## 历史 · `history/`
 
 | 主题 | 目录 | 状态 | 开始日期 | 一句话目标 |
